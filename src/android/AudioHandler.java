@@ -386,8 +386,6 @@ public class AudioHandler extends CordovaPlugin {
      */
     @SuppressWarnings("deprecation")
     public void setAudioOutputDevice(int output) {
-        private final String TAG1 = "AudioHandler.setAudioOutputDevice(): Error : ";
-
         AudioManager audiMgr = (AudioManager) this.cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
         if (output == 2) {
             audiMgr.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_SPEAKER, AudioManager.ROUTE_ALL);
@@ -396,7 +394,7 @@ public class AudioHandler extends CordovaPlugin {
             audiMgr.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
         }
         else {
-             LOG.e(TAG1," Unknown output device");
+             LOG.e("AudioHandler.setAudioOutputDevice(): Error : "," Unknown output device");
         }
     }
 
@@ -437,7 +435,6 @@ public class AudioHandler extends CordovaPlugin {
         };
 
     public void getAudioFocus() {
-        private final String TAG2 = "AudioHandler.getAudioFocus(): Error : ";
 
         AudioManager am = (AudioManager) this.cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
         int result = am.requestAudioFocus(focusChangeListener,
@@ -445,7 +442,7 @@ public class AudioHandler extends CordovaPlugin {
                                           AudioManager.AUDIOFOCUS_GAIN);
 
         if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            LOG.e(TAG2,result + " instead of " + AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+            LOG.e("AudioHandler.getAudioFocus(): Error : ",result + " instead of " + AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
         }
 
     }
@@ -477,13 +474,12 @@ public class AudioHandler extends CordovaPlugin {
      * @param volume            Volume to adjust to 0.0f - 1.0f
      */
     public void setVolume(String id, float volume) {
-        private final String TAG3 = "AudioHandler.setVolume(): Error : ";
 
         AudioPlayer audio = this.players.get(id);
         if (audio != null) {
             audio.setVolume(volume);
         } else {
-          LOG.e(TAG3,"Unknown Audio Player " + id);
+          LOG.e("AudioHandler.setVolume(): Error : ","Unknown Audio Player " + id);
         }
     }
 
