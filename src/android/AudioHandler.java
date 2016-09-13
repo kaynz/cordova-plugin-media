@@ -435,7 +435,6 @@ public class AudioHandler extends CordovaPlugin {
         };
 
     public void getAudioFocus() {
-
         AudioManager am = (AudioManager) this.cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
         int result = am.requestAudioFocus(focusChangeListener,
                                           AudioManager.STREAM_MUSIC,
@@ -474,7 +473,6 @@ public class AudioHandler extends CordovaPlugin {
      * @param volume            Volume to adjust to 0.0f - 1.0f
      */
     public void setVolume(String id, float volume) {
-
         AudioPlayer audio = this.players.get(id);
         if (audio != null) {
             audio.setVolume(volume);
