@@ -19,8 +19,5 @@ bin
 .project
 .classpath
 
-
-
-
-
- 
+#intellij
+.idea

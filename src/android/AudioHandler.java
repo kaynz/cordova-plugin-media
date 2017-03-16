@@ -135,9 +135,14 @@ public class AudioHandler extends CordovaPlugin {
             } catch (IllegalArgumentException e) {
                 fileUriStr = target;
             }
-            this.startPlayingAudio(args.getString(0), FileHelper.stripFileProtocol(fileUriStr));
-        }
-        else if (action.equals("seekToAudio")) {
+            boolean isMusic = true;
+            try {
+                isMusic = new JSONObject(args.getString(2)).getBoolean("isMusic");
+            } catch (JSONException e) {
+
+            }
+            this.startPlayingAudio(args.getString(0), FileHelper.stripFileProtocol(fileUriStr), isMusic);
+        } else if (action.equals("seekToAudio")) {
             this.seekToAudio(args.getString(0), args.getInt(1));
         }
         else if (action.equals("pausePlayingAudio")) {
@@ -315,10 +320,10 @@ public class AudioHandler extends CordovaPlugin {
      * @param id				The id of the audio player
      * @param file				The name of the audio file.
      */
-    public void startPlayingAudio(String id, String file) {
+    public void startPlayingAudio(String id, String file, boolean isMusic) {
         AudioPlayer audio = getOrCreatePlayer(id, file);
         audio.startPlaying(file);
-        getAudioFocus();
+        getAudioFocus(isMusic);
     }
 
     /**
@@ -436,13 +441,19 @@ public class AudioHandler extends CordovaPlugin {
             }
         };
 
-    public void getAudioFocus() {
+    public void getAudioFocus(boolean isMusic) {
         String TAG2 = "AudioHandler.getAudioFocus(): Error : ";
-
         AudioManager am = (AudioManager) this.cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
-        int result = am.requestAudioFocus(focusChangeListener,
-                                          AudioManager.STREAM_MUSIC,
-                                          AudioManager.AUDIOFOCUS_GAIN);
+        int result = AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        if (isMusic)
+            result = am.requestAudioFocus(focusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+        else
+            result = am.requestAudioFocus(focusChangeListener,
+                AudioManager.STREAM_NOTIFICATION,
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
 
         if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             LOG.e(TAG2,result + " instead of " + AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
